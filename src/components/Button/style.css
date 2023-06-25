@@ -1,0 +1,26 @@
+.btn-container{
+    padding: 1rem 0;
+    display: flex;
+    justify-content:center;
+}
+
+.btn-loadMorePost{      
+    padding: 1rem;
+    font-size: 1.5rem;
+    border-radius: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #1f3d70;
+    color: #fff;
+}
+
+.btn-container button:hover{
+    background-color: transparent;
+    border: solid 2px #1f3d70;
+    color: #1f3d70;
+}
+
+.btn-container button:disabled{
+    background-color: #888;
+    cursor: not-allowed;
+}

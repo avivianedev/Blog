@@ -1,0 +1,27 @@
+.posts-container{
+    padding: 2em;
+     width: 100%;
+     display: flex;
+     flex-wrap: wrap;
+     justify-content:center; 
+     gap: 2rem;   
+          
+   }
+   .post-content{
+     max-width: 280px;
+     min-height: 350px;
+     background-color: #eee;     
+     transition: transform 100ms ease-in-out;
+   }
+   
+   .post-content img{
+     width:100%;
+   }
+   
+   .post-content img:hover{
+     transform: scale(1.05);
+   }
+
+   .post-text{
+    padding:1rem;
+   }
