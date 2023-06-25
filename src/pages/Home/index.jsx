@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import './style.css'
 
-import { fechData } from '../../util/fetchdata'
+import { fechData } from '../../util/fetchData'
 import { CardPost } from '../../components/CardsPost'
 import { Button } from '../../components/Button'
 import { Search } from '../../components/Search'
