@@ -5,73 +5,83 @@ import { fechData } from '../../util/fetchData'
 import { CardPost } from '../../components/CardsPost'
 import { Button } from '../../components/Button'
 import { Search } from '../../components/Search'
+import { Loading } from '../../components/Loading'
 
+function Home() {
 
-function Home() {  
-
-  const [posts, SetPosts] = useState([])  
-  const [allposts, SetAllPost] = useState([])
+  const [posts, SetPosts] = useState([])
+  const [allposts, SetAllPost] = useState([''])
   const [page, SetPage] = useState(0)
-  const [disabled, SetDisabled] = useState(false) 
+  const [disabled, SetDisabled] = useState(false)
   const [SearchValue, SetSearchValue] = useState('')
+  const [IsLoading, SetIsLoading] = useState(false)
+  const [enableBtn, SetEnableBtn] = useState(false)
 
-  const postPerPageValue = 9;  
-  const nextPage = page + postPerPageValue;
+  const postPerPageValue = 9;
+
+  useEffect(() => {
+    const loading = async () => {
+      SetEnableBtn(false)
+      SetIsLoading(true)
+      const postsAndPhotos = await fechData()
+      SetAllPost(postsAndPhotos)
+      SetPosts(() => postsAndPhotos.slice(0, postPerPageValue))
+      SetIsLoading(false)
+      SetEnableBtn(true)
+    }
+    loading()
+
+  }, [])
 
   const filteredPosts = SearchValue ? allposts.filter(post => {
-     return post.title.toLowerCase().includes(SearchValue.toLowerCase())    
-  } ) :posts
-  
+    return post.title.toLowerCase().includes(SearchValue.toLowerCase())
+  }) : posts
+
   const handleChange = (e) => {
     return SetSearchValue(e.target.value)
   }
-   
-  useEffect(()=> {
-    const loading = async () => {
-      const postsAndPhotos = await fechData() 
-      SetPosts(postsAndPhotos.slice(page, postPerPageValue))
-      SetAllPost(postsAndPhotos)      
-    }  
-    loading()  
-  },[])
-  
+
   const loadingPost = () => {
-    SetPage(()=> page + postPerPageValue)    
+    const nextPage = page + postPerPageValue;
+    SetPage(page + postPerPageValue)
     const nextPosts = allposts.slice(nextPage, nextPage + postPerPageValue)
     posts.push(...nextPosts)
-    if(posts.length == allposts.length){
+    if (posts.length == allposts.length) {
       SetDisabled(true)
-    }      
+    }
   }
-
   return (
     <>
-    <div className="title">
-    <h1>Os melhores posts da atualidade</h1>       
-    </div> 
-    <Search
+      <div className="title">
+        <h1>Os melhores posts da atualidade</h1>
+      </div>
+
+      <Search
         SearchValue={SearchValue}
         handleChange={handleChange}
-    />     
-    
-      <div className="posts-container container">  
-      {filteredPosts.length === 0 && (
-        <span>Sem resultado para a sua busca {SearchValue}</span>
-      )}      
-      {filteredPosts.map(posts => ( 
-        <CardPost
-          key={posts.id}
-          posts={posts}
-        />        
-        ) )}     
-       
+      />
+
+      {IsLoading && <Loading />}
+
+      <div className="posts-container container">
+      {SearchValue && filteredPosts.length == 0 && (
+          <span>Sem resultado para a sua busca <strong>{SearchValue}</strong></span>
+        )}
+        {filteredPosts.map(posts => (
+          <CardPost
+            key={posts.id}
+            posts={posts}
+          />
+        ))}              
+
       </div>
-      {!SearchValue && ( 
+      {!SearchValue && enableBtn ? (
         <Button
-        onClick={loadingPost}  
-        disabled={disabled}           
-      />  
-      )}
+          onClick={loadingPost}
+          disabled={disabled}
+        />
+      ): ''}
+
       
     </>
   )
